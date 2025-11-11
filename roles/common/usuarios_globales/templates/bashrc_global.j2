@@ -1,0 +1,94 @@
+# .bashrc personalizado - Proyecto SO
+# Usuario: {{ item.nombre }}
+# Generado automáticamente el {{ ansible_date_time.date }}
+
+# === Configuración base ===
+
+# Source global definitions (varía según la distro)
+if [ -f /etc/bash.bashrc ]; then
+    . /etc/bash.bashrc
+elif [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
+
+# Cargar perfil del proyecto (si existe)
+if [ -f /etc/profile.d/proyecto-so.sh ]; then
+    . /etc/profile.d/proyecto-so.sh
+fi
+
+# === Aliases personales ===
+alias ll='ls -alF --color=auto'
+alias la='ls -A --color=auto'
+alias l='ls -CF --color=auto'
+alias grep='grep --color=auto'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias cls='clear'
+
+# === Aliases específicos según el rol ===
+{% if 'teachers' in item.grupos %}
+# Aliases para profesores
+alias ver-estudiantes='getent group students | cut -d: -f4 | tr "," "\n"'
+alias logs-sistema='sudo journalctl -f'
+alias red-check='ping -c 3 8.8.8.8'
+{% endif %}
+
+{% if 'students' in item.grupos %}
+# Aliases para estudiantes
+alias mi-info='id && groups'
+alias ayuda='proyecto_help'
+{% endif %}
+
+# === Configuración del prompt ===
+{% if ansible_os_family == "RedHat" %}
+PS1='\[\033[01;31m\][\u@\h \W]\$\[\033[00m\] '
+{% elif ansible_os_family == "Debian" %}
+PS1='\[\033[01;32m\]💻 \u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+{% else %}
+PS1='\[\033[01;34m\]🎮 \u@\h\[\033[00m\]:\[\033[01;36m\]\w\[\033[00m\]\$ '
+{% endif %}
+
+# === Variables de entorno ===
+export EDITOR=vim
+export HISTSIZE=1000
+export HISTFILESIZE=2000
+export HISTCONTROL=ignoredups:erasedups
+export LANG=es_ES.UTF-8
+export LC_ALL=es_ES.UTF-8
+
+# === Configuración específica por sistema ===
+{% if ansible_os_family == "Debian" %}
+# Ubuntu / Debian
+export BROWSER=firefox
+alias servicios='systemctl list-units --type=service --state=running | less'
+alias reiniciar-web='sudo systemctl restart apache2'
+alias actualizar='sudo apt update && sudo apt upgrade -y'
+alias instalar='sudo apt install -y'
+alias limpiar='sudo apt autoremove -y && sudo apt autoclean'
+{% elif ansible_os_family == "RedHat" %}
+# AlmaLinux / Fedora / Bazzite
+export BROWSER=firefox
+alias servicios='sudo systemctl status httpd vsftpd named'
+alias reiniciar-web='sudo systemctl restart httpd'
+alias actualizar='sudo dnf update -y || sudo rpm-ostree upgrade'
+alias instalar='sudo dnf install -y'
+{% endif %}
+
+# === Función de bienvenida personalizada ===
+bienvenida_{{ item.nombre | replace('-', '_') }}() {
+    echo "👋 Hola {{ item.nombre }}!"
+    echo "📅 $(date)"
+    echo "🖥️  Sistema: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+    {% if 'teachers' in item.grupos %}
+    echo "👨‍🏫 Rol: Profesor"
+    echo "🔧 Tienes permisos administrativos"
+    {% elif 'students' in item.grupos %}
+    echo "👨‍🎓 Rol: Estudiante"
+    echo "📚 Usa 'ayuda' para ver comandos disponibles"
+    {% endif %}
+}
+
+# Mostrar bienvenida solo en shells interactivos
+if [[ $- == *i* ]] && [[ -z "$TMUX" ]]; then
+    bienvenida_{{ item.nombre | replace('-', '_') }}
+fi

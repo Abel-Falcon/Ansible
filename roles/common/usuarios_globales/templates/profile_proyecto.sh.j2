@@ -1,0 +1,60 @@
+#!/bin/bash
+# =====================================================
+# 🌐 Perfil global del Proyecto SO
+# Se ejecuta automáticamente para todos los usuarios
+# Compatible con Ubuntu, AlmaLinux y Bazzite
+# =====================================================
+
+# === Variables del proyecto ===
+export PROYECTO_SO_VERSION="1.0"
+export PROYECTO_SO_FECHA="{{ ansible_date_time.date }}"
+export PROYECTO_SO_AUTOR="Proyecto SO - Configuración Automática"
+export PATH="$PATH:/usr/local/bin:/usr/local/sbin"
+
+# === Aliases globales ===
+alias proyecto-info='echo "🚀 Proyecto SO v$PROYECTO_SO_VERSION - Configurado el $PROYECTO_SO_FECHA"'
+alias sistema-info='hostnamectl && echo "Usuarios activos:" && who'
+alias red-info='ip -color addr show && echo "🌍 Rutas de red:" && ip route show'
+alias uptime-info='uptime -p'
+
+# === Funciones útiles ===
+proyecto_help() {
+    echo "🔧 COMANDOS DEL PROYECTO SO"
+    echo "==========================="
+    echo "proyecto-info     - Información del proyecto"
+    echo "sistema-info      - Información del sistema y usuarios"
+    echo "red-info          - Mostrar interfaces y rutas de red"
+    echo "proyecto-logs     - Ver logs recientes del sistema"
+    echo "proyecto-status   - Estado de servicios relevantes"
+    echo "uptime-info       - Tiempo encendido del sistema"
+    echo ""
+    echo "💡 Consejo: Usa 'sudo systemctl list-units --type=service' para ver todos los servicios."
+}
+
+proyecto_logs() {
+    echo "📋 LOGS RECIENTES DEL SISTEMA"
+    echo "============================="
+    journalctl --since "30 minutes ago" --no-pager | tail -30
+}
+
+proyecto_status() {
+    echo "📊 ESTADO DE SERVICIOS PRINCIPALES"
+    echo "=================================="
+    {% if ansible_os_family == "Debian" %}
+    systemctl status ssh apache2 ufw --no-pager -l 2>/dev/null || true
+    {% elif ansible_os_family == "RedHat" %}
+    systemctl status httpd vsftpd named --no-pager -l 2>/dev/null || true
+    {% else %}
+    systemctl list-units --type=service --state=running | head -20
+    {% endif %}
+}
+
+# Exportar funciones globalmente
+export -f proyecto_help proyecto_logs proyecto_status
+
+# === Mensaje de bienvenida (solo en shell interactiva) ===
+if [[ $- == *i* ]]; then
+    echo "🎯 Bienvenido al entorno del Proyecto SO"
+    echo "📦 Versión: $PROYECTO_SO_VERSION | 📅 Fecha: $PROYECTO_SO_FECHA"
+    echo "💡 Escribe 'proyecto_help' para ver los comandos disponibles"
+fi
