@@ -1,0 +1,40 @@
+---
+# Variables por defecto para el firewall (Ubuntu Server - UFW)
+
+# 🔧 Configuración básica del firewall
+ufw_default_policy_incoming: "deny"
+ufw_default_policy_outgoing: "allow"
+ufw_ipv6: true
+ufw_logging: "on"
+
+# ✅ Servicios permitidos por defecto
+ufw_allowed_services:
+  - "OpenSSH"
+  - "Apache Full"   # incluye HTTP y HTTPS
+  - "DNS"
+  - "FTP"
+
+# 🔢 Puertos personalizados del proyecto
+ufw_allowed_ports:
+  - "21000:21010/tcp"   # FTP pasivo
+  - "546/udp"           # DHCPv6 cliente
+  - "547/udp"           # DHCPv6 servidor
+
+# 🛡️ Redes confiables (whitelist)
+ufw_trusted_networks:
+  - "192.168.1.0/24"
+  - "127.0.0.0/8"
+
+# ⚙️ Configuración de fail2ban (protección contra fuerza bruta)
+fail2ban_enabled: true
+fail2ban_bantime: 3600
+fail2ban_findtime: 600
+fail2ban_maxretry: 3
+fail2ban_backend: "systemd"
+
+# 📋 Configuración de logging y monitoreo
+firewall_log_file: "/var/log/ufw.log"
+firewall_log_level: "low"
+monitoring_enabled: true
+security_reports_enabled: true
+log_rotation_days: 30

@@ -1,0 +1,7 @@
+---
+# Handlers para actualiza_windows
+
+- name: Reiniciar sistema tras actualizaciones
+  win_reboot:
+    msg: "Reinicio del sistema requerido tras actualizaciones."
+    reboot_timeout: 600

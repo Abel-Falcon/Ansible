@@ -1,0 +1,65 @@
+---
+# Variables específicas para Ubuntu Server
+
+# Configuración del servidor web
+web_server: apache2
+apache_port: 80
+apache_ssl_port: 443
+web_root: "/var/www/html"
+apache_modules:
+  - ssl
+  - rewrite
+  - headers
+
+# Configuración FTP
+ftp_service: vsftpd
+ftp_port: 21
+ftp_root: "/srv/ftp"
+ftp_passive_ports: "21000-21010"
+ftp_anonymous_enable: false
+
+# DNS y red
+dns_forwarders:
+  - "8.8.8.8"
+  - "1.1.1.1"
+network_domain: "proyecto-so.local"
+
+# IPv6
+ipv6_prefix: "2025:db10:20::/64"
+ipv6_router_address: "2025:db10:20::1"
+
+# Servicios a habilitar
+services_enabled:
+  - apache2
+  - vsftpd
+  - ufw
+  - fail2ban
+  - suricata
+
+# Firewall (UFW)
+firewall_default_zone: "public"
+firewall_masquerade: false
+
+# Fail2ban
+fail2ban_bantime: 3600
+fail2ban_findtime: 600
+fail2ban_maxretry: 3
+
+# Seguridad
+trusted_networks:
+  - "2025:db10:20::/64"
+  - "127.0.0.0/8"
+
+security_hardening:
+  ssh_max_attempts: 3
+  http_rate_limit: true
+  enable_intrusion_detection: true
+
+# Suricata IDS
+suricata_mode: "ids"
+suricata_home_net: "2025:db10:20::/64,127.0.0.0/8"
+suricata_interface: "{{ ansible_default_ipv4.interface }}"
+suricata_auto_update_rules: true
+
+# Contraseña sudo (opcional desde Vault)
+ansible_become_password: "{{ vault_local_sudo | default(omit) }}"

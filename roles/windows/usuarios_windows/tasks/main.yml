@@ -1,0 +1,18 @@
+---
+# Gestión de usuarios locales en Windows
+
+- name: "Crear o actualizar usuarios locales"
+  win_user:
+    name: "{{ item.nombre }}"
+    description: "{{ item.descripcion | default('Usuario gestionado por Ansible') }}"
+    password: "{{ item.password }}"
+    groups: "{{ item.grupos | default(['Usuarios']) }}"
+    state: "{{ item.estado | default('present') }}"
+    password_never_expires: no
+    user_cannot_change_password: no
+  loop: "{{ usuarios_lista }}"
+  register: usuarios_creados
+
+- name: "Mostrar resumen de usuarios gestionados"
+  debug:
+    msg: "Usuarios procesados: {{ usuarios_creados.results | map(attribute='item.nombre') | list }}"

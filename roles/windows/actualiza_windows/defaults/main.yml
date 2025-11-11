@@ -1,0 +1,20 @@
+---
+# Variables por defecto para actualiza_windows
+
+# Tipos de actualizaciones a aplicar
+actualiza_categorias:
+  - SecurityUpdates
+  - CriticalUpdates
+  - UpdateRollups
+
+# Descargar e instalar automáticamente
+actualiza_estado: installed
+
+# Reiniciar si es necesario tras la instalación
+actualiza_reiniciar: true
+
+# Ruta del log de actualización
+actualiza_log: "C:\\Logs\\actualizacion_windows.log"
+
+# Limpiar actualizaciones antiguas
+actualiza_limpiar_antiguas: true

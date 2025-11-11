@@ -1,0 +1,21 @@
+---
+# Handlers para usuarios_ubuntu
+
+# Si se modifica el archivo de sudoers, hay que verificarlo
+- name: validar archivo sudoers
+  command: visudo -cf /etc/sudoers
+  listen: "validar sudoers"
+  changed_when: false
+
+# Recargar el servicio SSH en caso de que cambie su configuración
+- name: recargar ssh
+  systemd:
+    name: ssh
+    state: reloaded
+  listen: "recargar ssh"
+
+# Actualizar la base de datos de grupos y usuarios (opcional)
+- name: actualizar usuarios
+  command: "getent passwd"
+  listen: "actualizar usuarios"
+  changed_when: false

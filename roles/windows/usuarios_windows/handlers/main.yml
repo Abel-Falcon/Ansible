@@ -1,0 +1,7 @@
+---
+# Handlers para usuarios_windows
+
+- name: Reiniciar equipo (si se requiere)
+  win_reboot:
+    msg: "Reinicio requerido tras cambios en usuarios."
+    reboot_timeout: 600

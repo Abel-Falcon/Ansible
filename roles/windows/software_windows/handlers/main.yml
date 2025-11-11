@@ -1,0 +1,7 @@
+---
+# Handlers para software_windows
+
+- name: Reiniciar si es necesario
+  win_reboot:
+    msg: "Reinicio requerido tras instalar o actualizar software."
+    reboot_timeout: 600

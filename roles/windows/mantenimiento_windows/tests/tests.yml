@@ -1,0 +1,5 @@
+---
+- name: Test del rol mantenimiento_windows
+  hosts: windows
+  roles:
+    - mantenimiento_windows

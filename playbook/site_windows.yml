@@ -1,0 +1,55 @@
+---
+# 🧩 Playbook maestro para Windows
+# Configura usuarios, software, mantenimiento, optimización y apariencia
+
+- name: "Despliegue completo - Windows"
+  hosts: windows
+  gather_facts: yes
+  become: no  # En Windows no se usa sudo; se manejan permisos por WinRM
+
+  vars:
+    timezone: "SA Pacific Standard Time"
+    temp_clean_days: 7
+
+  roles:
+    # 1️⃣ Usuarios y permisos
+    - role: usuarios_windows
+      tags: ["usuarios"]
+
+    # 2️⃣ Instalación de software esencial
+    - role: software_windows
+      tags: ["software"]
+
+    # 3️⃣ Optimización del sistema
+    - role: optimizacion_windows
+      tags: ["optimizacion"]
+
+    # 4️⃣ Mantenimiento (limpieza, tareas programadas)
+    - role: mantenimiento_windows
+      tags: ["mantenimiento"]
+
+    # 5️⃣ Actualizaciones automáticas
+    - role: actualiza_windows
+      tags: ["actualizacion"]
+
+    # 6️⃣ Ocultar usuarios del inicio de sesión
+    - role: ocultar_usuarios_windows
+      tags: ["seguridad"]
+
+    # 7️⃣ Configuración visual y personalización
+    - role: configuracion_visual_windows
+      tags: ["apariencia"]
+
+  tasks:
+    - name: "📋 Mostrar resumen de configuración aplicada"
+      win_shell: |
+        Write-Host "===================================="
+        Write-Host " ✅ Configuración de Windows completa"
+        Write-Host "===================================="
+        systeminfo | findstr /B /C:"OS Name" /C:"OS Version"
+      register: win_info
+      changed_when: false
+
+    - name: "Mostrar información del sistema Windows"
+      debug:
+        msg: "{{ win_info.stdout_lines }}"

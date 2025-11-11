@@ -1,0 +1,5 @@
+---
+- name: Test rol software_windows
+  hosts: windows
+  roles:
+    - software_windows

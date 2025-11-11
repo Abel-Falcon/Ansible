@@ -1,0 +1,7 @@
+---
+# Handlers para mantenimiento_windows
+
+- name: Reiniciar el sistema
+  win_reboot:
+    msg: "Reinicio del sistema tras mantenimiento programado."
+    reboot_timeout: 600

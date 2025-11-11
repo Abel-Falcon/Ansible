@@ -1,0 +1,3 @@
+---
+# Variables internas del rol optimizacion_windows
+opt_registro_visualfx: "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VisualEffects"

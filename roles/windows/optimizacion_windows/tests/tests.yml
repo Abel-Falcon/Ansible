@@ -1,0 +1,5 @@
+---
+- name: Test del rol optimizacion_windows
+  hosts: windows
+  roles:
+    - optimizacion_windows

@@ -1,0 +1,20 @@
+---
+# Ocultar usuarios del inicio de sesión en Windows
+
+- name: "Crear clave de registro para ocultar usuarios"
+  ansible.windows.win_regedit:
+    path: "{{ ruta_registro_ocultar }}"
+    state: present
+
+- name: "Configurar usuarios para que no aparezcan en el inicio de sesión"
+  ansible.windows.win_regedit:
+    path: "{{ ruta_registro_ocultar }}"
+    name: "{{ item }}"
+    data: 0
+    type: dword
+  loop: "{{ usuarios_ocultos }}"
+  register: ocultar_resultados
+
+- name: "Mostrar resumen de usuarios ocultos"
+  debug:
+    msg: "Usuarios ocultos correctamente: {{ usuarios_ocultos }}"

@@ -1,0 +1,21 @@
+---
+# Defaults para software_windows
+
+# Lista de paquetes a instalar con Chocolatey
+software_choco_paquetes:
+  - googlechrome
+  - firefox
+  - 7zip
+  - notepadplusplus
+  - git
+  - vscode
+
+# Programas instalados manualmente (por win_package)
+software_win_paquetes: []
+
+# Control de actualizaciones
+software_actualizar_choco: true
+software_reinstalar_si_falla: true
+
+# Ruta de logs
+software_log_path: "C:\\ansible\\logs\\software_install.log"

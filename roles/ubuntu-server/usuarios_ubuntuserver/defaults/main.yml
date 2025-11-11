@@ -1,0 +1,25 @@
+---
+# Variables por defecto para usuarios_ubuntu
+
+# Lista de usuarios a crear (se puede sobrescribir en vars o inventario)
+usuarios_lista:
+  - nombre: "admin"
+    uid: 1001
+    shell: "/bin/bash"
+    grupos: ["sudo"]
+    estado: "present"
+    password: "{{ 'admin123' | password_hash('sha512') }}"
+    ssh_key: "~/.ssh/id_rsa.pub"
+
+# Grupo por defecto
+usuarios_grupo_defecto: "users"
+
+# Control de sudoers
+usuarios_configurar_sudoers: true
+usuarios_sudoers_archivo: "/etc/sudoers.d/90-ansible-usuarios"
+
+# Configuración de shell
+usuarios_shell_defecto: "/bin/bash"
+
+# Control de eliminación
+usuarios_eliminar_faltantes: false

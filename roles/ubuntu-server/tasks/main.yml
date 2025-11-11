@@ -1,0 +1,124 @@
+---
+# Gestión de usuarios en Ubuntu Server
+
+- name: "Crear grupos necesarios"
+  group:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - sudo       # grupo administrativo de Ubuntu
+    - devs
+    - security
+    - audit
+
+- name: "Crear usuario admin (privilegios totales)"
+  user:
+    name: admin
+    comment: "Administrador total"
+    groups: sudo
+    append: true
+    shell: /bin/bash
+    create_home: true
+    password: "{{ (vault_ubuntu_passwords.admin | default('Admin2025!')) | password_hash('sha512') }}"
+
+- name: "Crear usuario tech (acceso limitado)"
+  user:
+    name: tech
+    comment: "Operador técnico"
+    groups: sudo
+    append: true
+    shell: /bin/bash
+    create_home: true
+    password: "{{ (vault_ubuntu_passwords.tech | default('Tech2025!')) | password_hash('sha512') }}"
+
+- name: "Crear usuario dev (acceso medio)"
+  user:
+    name: dev
+    comment: "Desarrollador"
+    groups: devs
+    append: true
+    shell: /bin/bash
+    create_home: true
+    password: "{{ (vault_ubuntu_passwords.dev | default('Dev2025!')) | password_hash('sha512') }}"
+
+- name: "Crear usuario security (solo seguridad)"
+  user:
+    name: security
+    comment: "Operador de seguridad"
+    groups: security
+    append: true
+    shell: /bin/bash
+    create_home: true
+    password: "{{ (vault_ubuntu_passwords.security | default('Sec2025!')) | password_hash('sha512') }}"
+
+- name: "Crear usuario auditor (solo lectura, sin sudo)"
+  user:
+    name: auditor
+    comment: "Auditor - solo lectura"
+    groups: audit
+    append: true
+    shell: /bin/bash
+    create_home: true
+    password: "{{ (vault_ubuntu_passwords.auditor | default('Audit2025!')) | password_hash('sha512') }}"
+
+# === Configuración de sudoers ===
+
+- name: "Sudoers para admin (root sin contraseña)"
+  copy:
+    dest: /etc/sudoers.d/admin
+    mode: '0440'
+    content: |
+      admin ALL=(ALL:ALL) NOPASSWD: ALL
+  notify: validar sudoers
+
+- name: "Sudoers para tech (limitado a systemctl y logs)"
+  copy:
+    dest: /etc/sudoers.d/tech
+    mode: '0440'
+    content: |
+      tech ALL=(ALL:ALL) NOPASSWD: \
+        /bin/systemctl start *, \
+        /bin/systemctl stop *, \
+        /bin/systemctl restart *, \
+        /bin/systemctl status *, \
+        /bin/journalctl *
+  notify: validar sudoers
+
+- name: "Sudoers para dev (servicios y logs)"
+  copy:
+    dest: /etc/sudoers.d/dev
+    mode: '0440'
+    content: |
+      dev ALL=(ALL:ALL) NOPASSWD: \
+        /bin/systemctl restart *, \
+        /bin/systemctl status *, \
+        /bin/journalctl *
+  notify: validar sudoers
+
+- name: "Sudoers para security (herramientas de seguridad)"
+  copy:
+    dest: /etc/sudoers.d/security
+    mode: '0440'
+    content: |
+      security ALL=(ALL:ALL) NOPASSWD: \
+        /usr/bin/fail2ban-client *, \
+        /usr/bin/ufw *, \
+        /usr/sbin/auditctl *, \
+        /usr/sbin/aureport *
+  notify: validar sudoers
+
+- name: "Eliminar sudo a auditor (sin permisos root)"
+  file:
+    path: /etc/sudoers.d/auditor
+    state: absent
+
+- name: "Asegurar permisos 0700 en /home de los usuarios"
+  file:
+    path: "/home/{{ item }}"
+    mode: "0700"
+  loop:
+    - admin
+    - tech
+    - dev
+    - security
+    - auditor

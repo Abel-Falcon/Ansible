@@ -1,0 +1,5 @@
+---
+- name: Test rol usuarios_windows
+  hosts: windows
+  roles:
+    - usuarios_windows

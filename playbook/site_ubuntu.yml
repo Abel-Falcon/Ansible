@@ -1,0 +1,48 @@
+---
+# 🧩 Playbook maestro para Ubuntu Server
+# Configura seguridad, usuarios, firewall y mantenimiento básico
+
+- name: "Despliegue completo - Ubuntu Server"
+  hosts: ubuntu_servers
+  become: yes
+  gather_facts: yes
+
+  vars:
+    timezone: "America/Lima"
+    selinux_state: "disabled"
+    firewall_masquerade: false
+
+  roles:
+    # 1️⃣ Configuración básica y actualización del sistema
+    - role: common
+      tags: ["base", "update"]
+
+    # 2️⃣ Configuración de usuarios y permisos
+    - role: usuarios_ubuntu
+      tags: ["usuarios"]
+
+    # 3️⃣ Configuración de firewall y seguridad
+    - role: firewall
+      tags: ["seguridad", "firewall"]
+
+    # 4️⃣ Configuración de tareas automatizadas (cron)
+    - role: mantenimiento
+      tags: ["mantenimiento"]
+
+    # 5️⃣ Respaldo y restauración (si usas rear o backup)
+    - role: backup
+      tags: ["backup"]
+
+  tasks:
+    - name: "📦 Verificar estado general del sistema"
+      shell: |
+        echo "==================================="
+        echo "   ✅ Ubuntu configurado con éxito  "
+        echo "==================================="
+        lsb_release -a
+      register: system_info
+      changed_when: false
+
+    - name: "Mostrar información del sistema"
+      debug:
+        msg: "{{ system_info.stdout_lines }}"

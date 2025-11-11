@@ -1,0 +1,41 @@
+---
+# Variables globales para todos los hosts del Proyecto SO
+
+network_domain: "proyecto-so.local"
+dns_servers:
+  - "8.8.8.8"
+  - "8.8.4.4"
+  - "1.1.1.1"
+
+timezone: "America/Lima"
+ntp_servers:
+  - "pool.ntp.org"
+  - "time.google.com"
+
+firewall_enabled: true
+configurar_sudo: true
+
+log_level: info
+log_retention_days: 30
+
+software_comun:
+  - git
+  - vim
+  - htop
+  - curl
+  - wget
+  - net-tools
+  - tree
+
+backup_enabled: true
+backup_retention_days: 7
+backup_directory: "/var/backups/proyecto-so"
+
+proyecto_so:
+  version: "1.0"
+  descripcion: "Proyecto de Sistemas Operativos - Ubuntu Server + Windows 11"
+  autor: "Nehemías Abel Falcón Lanchi"
+  fecha_creacion: "{{ ansible_date_time.date }}"
+
+# Contraseña sudo (opcional si está en vault)
+ansible_become_password: "{{ vault_local_sudo | default(omit) }}"

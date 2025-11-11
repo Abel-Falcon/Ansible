@@ -1,0 +1,94 @@
+---
+proyecto:
+  nombre: "Proyecto de Sistemas Operativos"
+  version: "2.1"
+  autor: "Nehemías Abel Falcón Lanchi"
+  institucion: "Universidad Peruana Unión"
+  materia: "Sistemas Operativos - Villegas"
+
+red:
+  dominio: "proyecto-so.local"
+  red_local: "192.168.1.0/24"
+  servidor_ip: "192.168.1.10"
+  dns_externos:
+    - "8.8.8.8"
+    - "1.1.1.1"
+  ipv6_prefix: "2025:db10:20::/64"
+  ipv6_servidor: "2025:db10:20::1"
+
+usuarios:
+  # Usuarios del servidor Ubuntu
+  administradores:
+    - nombre: "admin"
+      nombre_completo: "Administrador del sistema"
+      grupos: ["sudo"]
+      shell: "/bin/bash"
+      crear_home: true
+
+  operadores:
+    - nombre: "tech"
+      nombre_completo: "Técnico de soporte"
+      grupos: ["adm"]
+      shell: "/bin/bash"
+      crear_home: true
+      sudo_commands:
+        - "/usr/bin/systemctl restart *"
+        - "/usr/bin/apt *"
+
+  usuarios_generales:
+    - nombre: "user"
+      nombre_completo: "Usuario estándar"
+      grupos: ["users"]
+      shell: "/bin/bash"
+      crear_home: true
+
+servicios_ubuntu:
+  apache2:
+    puerto: 80
+    ssl_puerto: 443
+    documento_raiz: "/var/www/html"
+
+  ftp:
+    puerto: 21
+    puertos_pasivos: "21000-21010"
+    acceso_anonimo: false
+
+  dns:
+    puerto: 53
+    forwarders:
+      - "8.8.8.8"
+      - "1.1.1.1"
+    zonas:
+      - nombre: "proyecto-so.local"
+        tipo: "master"
+
+  suricata:
+    modo: "ids"
+    interfaz: "ens37"
+
+software_windows:
+  winget_packages:
+    - "Google.Chrome"
+    - "Microsoft.VisualStudioCode"
+    - "VideoLAN.VLC"
+    - "7zip.7zip"
+
+optimizacion:
+  swap_size: "4G"
+  vm_swappiness: 10
+  kernel_params:
+    - "quiet"
+    - "splash"
+
+mantenimiento:
+  auto_update: true
+  cleanup_enabled: true
+  cleanup_schedule: "weekly"
+  backup_enabled: true
+  backup_retention_days: 7
+
+hosts_windows:
+  - nombre: "win11"
+    ip: "192.168.1.20"
+    usuario: "Administrador"
+    descripcion: "Cliente Windows 11"

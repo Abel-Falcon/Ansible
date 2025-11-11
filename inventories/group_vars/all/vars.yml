@@ -1,0 +1,17 @@
+---
+# Variables no sensibles, referenciando al vault
+
+# Acceso a base de datos
+db_root_password: "{{ vault_db_root_password }}"
+db_app_user: "{{ vault_db_app_user }}"
+db_app_password: "{{ vault_db_app_password }}"
+
+# Acceso SSH
+ssh_private_key_content: "{{ vault_ssh_private_key }}"
+
+# Windows
+windows_admin_password: "{{ vault_windows_admin_password }}"
+
+# Claves de seguridad
+jwt_secret_key: "{{ vault_jwt_secret }}"
+encryption_key: "{{ vault_encryption_key }}"

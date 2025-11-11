@@ -1,0 +1,74 @@
+---
+# Tareas comunes para Ubuntu Server
+
+- name: "Actualizar lista de paquetes APT"
+  apt:
+    update_cache: yes
+  tags: [update]
+
+- name: "Actualizar todos los paquetes del sistema"
+  apt:
+    upgrade: dist
+  tags: [update]
+
+- name: "Instalar paquetes básicos"
+  apt:
+    name:
+      - vim
+      - wget
+      - curl
+      - htop
+      - net-tools
+      - ufw
+      - chrony
+      - git
+      - unzip
+    state: present
+  tags: [packages]
+
+- name: "Configurar zona horaria"
+  timezone:
+    name: "{{ timezone | default('America/Lima') }}"
+  tags: [timezone]
+
+- name: "Habilitar y configurar UFW (firewall)"
+  ufw:
+    state: enabled
+    policy: deny
+  tags: [firewall]
+
+- name: "Permitir conexión SSH"
+  ufw:
+    rule: allow
+    name: OpenSSH
+  tags: [firewall]
+
+- name: "Verificar estado de UFW"
+  command: ufw status
+  register: ufw_status
+  changed_when: false
+  tags: [firewall]
+
+- name: "Habilitar y arrancar Chrony (sincronización NTP)"
+  systemd:
+    name: chrony
+    enabled: yes
+    state: started
+  tags: [ntp]
+
+- name: "Sincronizar la hora del sistema"
+  command: chronyc makestep
+  changed_when: false
+  tags: [ntp]
+
+- name: "Mostrar hora y zona configurada"
+  command: timedatectl
+  register: time_info
+  changed_when: false
+  tags: [timezone]
+
+- debug:
+    msg: 
+      - "Zona horaria configurada: {{ timezone | default('America/Lima') }}"
+      - "Hora actual del sistema:"
+      - "{{ time_info.stdout_lines }}"

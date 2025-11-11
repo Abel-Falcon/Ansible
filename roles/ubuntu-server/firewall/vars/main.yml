@@ -1,0 +1,39 @@
+---
+# Variables específicas para el rol de firewall en Ubuntu Server
+
+# 🌐 Dominio y red del proyecto
+network_domain: "proyecto-so.local"
+trusted_networks:
+  - "192.168.1.0/24"
+  - "127.0.0.0/8"
+
+# 🔥 Política del firewall
+ufw_default_policy_incoming: "deny"
+ufw_default_policy_outgoing: "allow"
+
+# 🧩 Servicios del proyecto
+ufw_allowed_services:
+  - "OpenSSH"
+  - "Apache Full"
+  - "DNS"
+  - "FTP"
+
+# 🧱 Puertos personalizados (ejemplo)
+ufw_allowed_ports:
+  - "21000:21010/tcp"
+
+# 🛡️ Fail2ban (seguridad)
+fail2ban_enabled: true
+fail2ban_jails:
+  sshd:
+    enabled: true
+    port: ssh
+    filter: sshd
+    logpath: /var/log/auth.log
+    maxretry: 3
+  apache-auth:
+    enabled: true
+    port: http,https
+    filter: apache-auth
+    logpath: /var/log/apache2/*error.log
+    maxretry: 5

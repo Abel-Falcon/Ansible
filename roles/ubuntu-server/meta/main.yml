@@ -1,0 +1,26 @@
+---
+# Metadatos del rol usuarios_ubuntu
+
+galaxy_info:
+  author: TuNombre
+  description: "Gestión de usuarios y permisos en Ubuntu Server"
+  company: "Proyecto SO - Universidad"
+  license: MIT
+  min_ansible_version: "2.12"
+
+  platforms:
+  - name: Ubuntu
+    versions:
+      - focal    # 20.04
+      - jammy    # 22.04
+      - noble    # 24.04
+
+
+  galaxy_tags:
+    - users
+    - ubuntu
+    - security
+    - sudo
+    - administration
+
+dependencies: []

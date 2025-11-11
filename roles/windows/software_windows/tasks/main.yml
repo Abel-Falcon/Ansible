@@ -1,0 +1,44 @@
+---
+# Instalación y gestión de software en Windows
+
+- name: "Verificar si Chocolatey está instalado"
+  win_stat:
+    path: "C:\\ProgramData\\chocolatey\\choco.exe"
+  register: choco_instalado
+
+- name: "Instalar Chocolatey (si no está presente)"
+  win_shell: |
+    Set-ExecutionPolicy Bypass -Scope Process -Force;
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
+    iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+  when: not choco_instalado.stat.exists
+  args:
+    creates: "C:\\ProgramData\\chocolatey\\choco.exe"
+
+- name: "Actualizar Chocolatey y todos los paquetes"
+  win_chocolatey:
+    name: all
+    state: latest
+  when: software_actualizar_choco
+  notify: "Reiniciar si es necesario"
+
+- name: "Instalar paquetes básicos con Chocolatey"
+  win_chocolatey:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ software_choco_paquetes }}"
+  register: choco_result
+
+- name: "Instalar software adicional manual (win_package)"
+  win_package:
+    path: "{{ item.path }}"
+    product_id: "{{ item.product_id | default(omit) }}"
+    state: "{{ item.state | default('present') }}"
+  loop: "{{ software_win_paquetes }}"
+  when: software_win_paquetes | length > 0
+
+- name: "Mostrar resumen de instalación"
+  debug:
+    msg:
+      - "Paquetes instalados: {{ software_choco_paquetes }}"
+      - "Estado: OK ✅"

@@ -1,0 +1,30 @@
+---
+# Handlers para el firewall en Ubuntu Server
+
+# 🔥 UFW: Firewall principal
+- name: reload ufw
+  command: ufw reload
+  become: true
+
+- name: restart ufw
+  command: ufw disable && ufw enable
+  become: true
+
+# 🛡️ Fail2ban (detección de intrusos)
+- name: restart fail2ban
+  systemd:
+    name: fail2ban
+    state: restarted
+    enabled: yes
+  become: true
+
+- name: reload fail2ban
+  command: fail2ban-client reload
+  become: true
+
+# 💾 Guardar configuración (opcional)
+- name: save firewall config
+  command: ufw status numbered
+  register: ufw_status
+  changed_when: false
+  become: true

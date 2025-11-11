@@ -1,0 +1,19 @@
+---
+# Variables por defecto para configuracion_visual_windows
+
+# Fondo de pantalla por defecto
+fondo_pantalla_url: "https://wallpapercave.com/wp/wp1234567.jpg"
+fondo_pantalla_destino: "C:\\Users\\Public\\Pictures\\wallpaper.jpg"
+
+# Tema del sistema (claro u oscuro)
+tema_windows: "oscuro"
+
+# Mostrar extensiones de archivo y archivos ocultos
+mostrar_extensiones: true
+mostrar_archivos_ocultos: false
+
+# Tamaño de iconos del escritorio (Small, Medium, Large)
+tamano_iconos: "Medium"
+
+# Mostrar segundos en el reloj del sistema
+mostrar_segundos_reloj: true

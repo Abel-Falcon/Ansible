@@ -1,0 +1,26 @@
+---
+# Variables específicas para usuarios_ubuntu
+
+# Grupo administrador en Ubuntu (equivalente a 'wheel' en Red Hat)
+usuarios_grupo_admin: "sudo"
+
+# Grupo base para usuarios comunes
+usuarios_grupo_base: "users"
+
+# Ruta por defecto del archivo sudoers personalizado
+usuarios_sudoers_path: "/etc/sudoers.d/90-ansible-usuarios"
+
+# Permisos por defecto para la carpeta home
+usuarios_home_mode: "0750"
+
+# Ruta por defecto para claves SSH
+usuarios_ssh_path: ".ssh/authorized_keys"
+
+# Política de contraseñas
+usuarios_password_minlen: 8
+usuarios_password_hash_algorithm: "sha512"
+
+# Configuración por defecto para crear usuarios
+usuarios_default_shell: "/bin/bash"
+usuarios_create_home: true
+usuarios_umask: "027"

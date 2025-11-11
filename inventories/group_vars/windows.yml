@@ -1,0 +1,29 @@
+---
+# Variables específicas para Windows 11
+
+# Software a instalar (usando WinGet)
+software_winget:
+  - "Google.Chrome"
+  - "Microsoft.VisualStudioCode"
+  - "VideoLAN.VLC"
+  - "7zip.7zip"
+
+# Configuración del sistema
+windows_timezone: "SA Pacific Standard Time"
+windows_updates_enabled: true
+windows_defender_enabled: true
+auto_update_schedule: "Weekly"
+
+# Optimización
+windows_swapfile_size: "4GB"
+windows_virtual_memory_optimized: true
+
+# Mantenimiento
+cleanup_temp_files: true
+cleanup_schedule: "Weekly"
+
+# Configuración de red
+network_domain: "proyecto-so.local"
+dns_servers:
+  - "8.8.8.8"
+  - "1.1.1.1"

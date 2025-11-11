@@ -1,0 +1,3 @@
+---
+# Variables internas del rol software_windows
+software_choco_ruta: "C:\\ProgramData\\chocolatey\\choco.exe"

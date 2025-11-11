@@ -1,0 +1,5 @@
+---
+- name: Test del rol actualiza_windows
+  hosts: windows
+  roles:
+    - actualiza_windows

@@ -1,0 +1,66 @@
+---
+# Configuración visual del sistema Windows
+
+- name: "Descargar fondo de pantalla"
+  ansible.windows.win_get_url:
+    url: "{{ fondo_pantalla_url }}"
+    dest: "{{ fondo_pantalla_destino }}"
+
+- name: "Establecer fondo de pantalla"
+  ansible.windows.win_regedit:
+    path: "HKCU:\\Control Panel\\Desktop"
+    name: "Wallpaper"
+    data: "{{ fondo_pantalla_destino }}"
+    type: string
+
+- name: "Refrescar escritorio para aplicar fondo"
+  win_shell: RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters
+
+# ===============================
+# TEMA OSCURO / CLARO
+# ===============================
+- name: "Configurar tema {{ tema_windows }}"
+  ansible.windows.win_regedit:
+    path: "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"
+    name: "AppsUseLightTheme"
+    data: "{{ 0 if tema_windows == 'oscuro' else 1 }}"
+    type: dword
+
+- name: "Configurar tema del sistema (Dark/Light)"
+  ansible.windows.win_regedit:
+    path: "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"
+    name: "SystemUsesLightTheme"
+    data: "{{ 0 if tema_windows == 'oscuro' else 1 }}"
+    type: dword
+
+# ===============================
+# EXPLORADOR DE ARCHIVOS
+# ===============================
+- name: "Mostrar extensiones de archivo"
+  ansible.windows.win_regedit:
+    path: "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced"
+    name: "HideFileExt"
+    data: "{{ 0 if mostrar_extensiones else 1 }}"
+    type: dword
+
+- name: "Mostrar archivos ocultos"
+  ansible.windows.win_regedit:
+    path: "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced"
+    name: "Hidden"
+    data: "{{ 1 if mostrar_archivos_ocultos else 2 }}"
+    type: dword
+
+# ===============================
+# ICONOS Y RELOJ
+# ===============================
+- name: "Mostrar segundos en el reloj"
+  ansible.windows.win_regedit:
+    path: "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced"
+    name: "ShowSecondsInSystemClock"
+    data: "{{ 1 if mostrar_segundos_reloj else 0 }}"
+    type: dword
+
+- name: "Aplicar cambios visuales"
+  win_shell: |
+    Stop-Process -Name explorer -Force
+  ignore_errors: true

@@ -1,0 +1,61 @@
+---
+# Rol: mantenimiento_windows
+# Realiza tareas de mantenimiento preventivo y correctivo en Windows
+
+- name: "Crear carpeta de logs si no existe"
+  win_file:
+    path: "{{ mant_ruta_logs | dirname }}"
+    state: directory
+
+- name: "Limpieza de archivos temporales"
+  win_shell: |
+    Write-Output "=== Limpieza de temporales ===" | Out-File "{{ mant_ruta_logs }}" -Append
+    Remove-Item -Path $env:TEMP\* -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item -Path C:\Windows\Temp\* -Recurse -Force -ErrorAction SilentlyContinue
+    Write-Output "Limpieza completada" | Out-File "{{ mant_ruta_logs }}" -Append
+  when: mant_limpiar_disco
+
+- name: "Comprobación del sistema con SFC"
+  win_shell: |
+    Write-Output "=== Comprobación SFC ===" | Out-File "{{ mant_ruta_logs }}" -Append
+    sfc /scannow | Out-File "{{ mant_ruta_logs }}" -Append
+  when: mant_comprobar_sistema
+
+- name: "Verificar y reparar disco (CHKDSK)"
+  win_shell: |
+    Write-Output "=== CHKDSK ===" | Out-File "{{ mant_ruta_logs }}" -Append
+    chkdsk C: /F /R | Out-File "{{ mant_ruta_logs }}" -Append
+  when: mant_comprobar_disco
+
+- name: "Verificar actualizaciones disponibles"
+  win_updates:
+    category_names:
+      - SecurityUpdates
+      - CriticalUpdates
+    state: searched
+  register: updates_info
+  when: mant_verificar_actualizaciones
+
+- name: "Registrar estado de actualizaciones"
+  win_shell: |
+    Write-Output "=== ACTUALIZACIONES ===" | Out-File "{{ mant_ruta_logs }}" -Append
+    Write-Output "{{ updates_info.updates | length }} actualizaciones pendientes." | Out-File "{{ mant_ruta_logs }}" -Append
+  when: mant_verificar_actualizaciones
+
+- name: "Generar reporte final de mantenimiento"
+  win_shell: |
+    Write-Output "=== REPORTE FINAL ===" | Out-File "{{ mant_ruta_logs }}" -Append
+    Write-Output "Fecha: $(Get-Date)" | Out-File "{{ mant_ruta_logs }}" -Append
+    Write-Output "Sistema: $env:COMPUTERNAME" | Out-File "{{ mant_ruta_logs }}" -Append
+    Write-Output "Mantenimiento completado correctamente." | Out-File "{{ mant_ruta_logs }}" -Append
+  when: mant_generar_reporte
+
+- name: "Reiniciar el sistema si se requiere"
+  win_reboot:
+    msg: "Reinicio programado tras mantenimiento del sistema."
+    reboot_timeout: 600
+  when: mant_reiniciar_si_necesario
+
+- name: "Confirmar mantenimiento completado"
+  debug:
+    msg: "✅ Mantenimiento completado correctamente. Log en {{ mant_ruta_logs }}"

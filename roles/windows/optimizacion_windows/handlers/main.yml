@@ -1,0 +1,7 @@
+---
+# Handlers para optimizacion_windows
+
+- name: Reiniciar el sistema tras optimización
+  win_reboot:
+    msg: "Reinicio programado tras optimización de rendimiento."
+    reboot_timeout: 600

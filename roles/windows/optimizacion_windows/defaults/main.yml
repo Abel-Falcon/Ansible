@@ -1,0 +1,26 @@
+---
+# Variables por defecto para optimizacion_windows
+
+# Servicios innecesarios que se desactivarán
+opt_servicios_deshabilitar:
+  - DiagTrack        # Telemetría
+  - WSearch          # Indexado de búsqueda
+  - Fax              # Servicio de fax
+  - XblGameSave      # Xbox Game Save
+  - MapsBroker       # Descargas de mapas offline
+  - RemoteRegistry   # Riesgo de seguridad
+
+# Limpieza de temporales y cachés
+opt_limpiar_temp: true
+
+# Configuración de energía
+opt_modo_energia: "high performance"
+
+# Desactivar efectos visuales
+opt_desactivar_efectos: true
+
+# Optimización del arranque
+opt_hibernacion_desactivar: true
+
+# Ajustes de red (TCP/IP)
+opt_tune_network: true

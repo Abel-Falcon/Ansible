@@ -1,0 +1,11 @@
+---
+# Playbook principal del proyecto SO
+# Ejecuta configuraciones para Ubuntu y Windows
+
+- name: "Configuración de Ubuntu - Servicios de Red"
+  import_playbook: playbooks/ubuntu.yml
+  when: "'ubuntu' in groups"
+
+- name: "Configuración de Windows - Sistema Desktop/Servidor"
+  import_playbook: playbooks/windows.yml
+  when: "'windows' in groups"

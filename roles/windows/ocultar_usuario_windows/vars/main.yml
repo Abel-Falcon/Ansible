@@ -1,0 +1,7 @@
+---
+# Variables personalizadas (pueden sobrescribirse en inventory)
+
+# Ejemplo de personalización en el inventario:
+# usuarios_ocultos:
+#   - "admin"
+#   - "soporte"

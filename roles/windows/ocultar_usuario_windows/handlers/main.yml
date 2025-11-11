@@ -1,0 +1,4 @@
+---
+# Handlers para ocultar_usuarios_windows
+- name: "Reiniciar explorer (si es necesario)"
+  win_shell: Stop-Process -Name explorer -Force

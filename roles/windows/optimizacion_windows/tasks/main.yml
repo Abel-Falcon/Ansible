@@ -1,0 +1,51 @@
+---
+# Rol: optimizacion_windows
+# Mejora rendimiento y seguridad básica del sistema
+
+- name: "Desactivar servicios innecesarios"
+  win_service:
+    name: "{{ item }}"
+    start_mode: disabled
+    state: stopped
+  loop: "{{ opt_servicios_deshabilitar }}"
+  ignore_errors: true
+  register: desactivados
+
+- name: "Mostrar servicios desactivados"
+  debug:
+    msg: "Servicios desactivados: {{ opt_servicios_deshabilitar }}"
+
+- name: "Aplicar plan de energía {{ opt_modo_energia }}"
+  win_shell: >
+    powercfg -setactive SCHEME_MIN
+  when: opt_modo_energia == "high performance"
+
+- name: "Desactivar hibernación"
+  win_shell: powercfg /hibernate off
+  when: opt_hibernacion_desactivar
+
+- name: "Desactivar efectos visuales para rendimiento"
+  win_regedit:
+    path: HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects
+    name: VisualFXSetting
+    data: 2
+    type: dword
+  when: opt_desactivar_efectos
+
+- name: "Optimizar red (TCP/IP tuning)"
+  win_shell: |
+    netsh int tcp set global autotuninglevel=normal
+    netsh int tcp set global rss=enabled
+    netsh int tcp set global chimney=enabled
+    netsh int tcp set global ecncapability=disabled
+  when: opt_tune_network
+
+- name: "Limpiar archivos temporales"
+  win_shell: |
+    Remove-Item -Path $env:TEMP\* -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item -Path C:\Windows\Temp\* -Recurse -Force -ErrorAction SilentlyContinue
+  when: opt_limpiar_temp
+
+- name: "Optimización finalizada"
+  debug:
+    msg: "✅ Optimización del sistema Windows completada con éxito."

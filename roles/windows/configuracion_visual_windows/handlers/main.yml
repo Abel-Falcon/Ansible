@@ -1,0 +1,6 @@
+---
+# Handlers para configuracion_visual_windows
+- name: "Actualizar entorno del usuario"
+  win_shell: |
+    Stop-Process -Name explorer -Force
+  ignore_errors: true

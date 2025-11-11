@@ -1,0 +1,11 @@
+---
+# Variables por defecto para ocultar_usuarios_windows
+
+usuarios_ocultos:
+  - "Administrador"
+  - "Invitado"
+  - "tech"
+  - "security"
+
+# Ruta del registro donde se ocultan usuarios
+ruta_registro_ocultar: "HKLM:\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\SpecialAccounts\\UserList"

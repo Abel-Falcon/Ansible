@@ -1,0 +1,7 @@
+---
+# Variables personalizadas para configuracion_visual_windows
+# (se pueden sobrescribir desde el inventario o playbook)
+
+# Ejemplo:
+# tema_windows: "claro"
+# mostrar_archivos_ocultos: true

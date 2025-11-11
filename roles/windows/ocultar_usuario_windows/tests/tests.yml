@@ -1,0 +1,5 @@
+---
+- name: "Prueba de ocultar usuarios"
+  hosts: windows
+  roles:
+    - ocultar_usuarios_windows

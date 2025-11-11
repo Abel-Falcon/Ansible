@@ -1,0 +1,23 @@
+---
+# Variables por defecto para mantenimiento_windows
+
+# Realizar limpieza de disco y temporales
+mant_limpiar_disco: true
+
+# Ejecutar comprobaciones del sistema
+mant_comprobar_sistema: true
+
+# Ejecutar comprobación de disco (chkdsk)
+mant_comprobar_disco: true
+
+# Verificar actualizaciones pendientes
+mant_verificar_actualizaciones: true
+
+# Generar reporte de mantenimiento
+mant_generar_reporte: true
+
+# Reiniciar si es necesario
+mant_reiniciar_si_necesario: true
+
+# Ruta de logs de mantenimiento
+mant_ruta_logs: "C:\\Logs\\mantenimiento_windows.log"

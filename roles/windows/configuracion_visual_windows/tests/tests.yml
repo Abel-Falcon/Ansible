@@ -1,0 +1,5 @@
+---
+- name: "Prueba de configuración visual"
+  hosts: windows
+  roles:
+    - configuracion_visual_windows

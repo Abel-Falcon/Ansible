@@ -1,0 +1,26 @@
+---
+# Defaults para usuarios_windows
+
+# Lista de usuarios a crear (puede sobreescribirse)
+usuarios_lista:
+  - nombre: "AdminLocal"
+    descripcion: "Administrador local principal"
+    password: "Admin2025!"
+    grupos: ["Administradores"]
+    estado: "present"
+
+  - nombre: "Operador"
+    descripcion: "Usuario de soporte técnico"
+    password: "Tech2025!"
+    grupos: ["Usuarios"]
+    estado: "present"
+
+  - nombre: "Invitado"
+    descripcion: "Usuario temporal sin privilegios"
+    password: "Guest2025!"
+    grupos: ["Usuarios"]
+    estado: "absent"  # no se creará por defecto
+
+# Política de contraseñas
+usuarios_cambiar_password_al_crear: true
+usuarios_forzar_cambio_proximo_inicio: false
